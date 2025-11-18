@@ -13,7 +13,7 @@ import com.vdurmont.semver4j.Semver
 import java.io.File
 
 private const val TAG = "updateService"
-private const val WLED_BRAND = "WLED"
+private const val WLED_BRAND = "NOXEN"
 private const val WLED_PRODUCT = "FOSS"
 
 class ReleaseService(private val versionWithAssetsRepository: VersionWithAssetsRepository) {

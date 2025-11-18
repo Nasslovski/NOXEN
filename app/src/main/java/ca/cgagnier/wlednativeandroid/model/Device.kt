@@ -110,7 +110,7 @@ data class Device(
         fun getDefaultAPDevice(): Device {
             return Device(
                 address = DEFAULT_WLED_AP_IP,
-                name = "WLED AP Mode",
+                name = "NOXEN AP Mode",
                 isCustomName = true,
                 isHidden = false,
                 isOnline = true,
