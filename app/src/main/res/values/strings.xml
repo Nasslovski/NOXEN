@@ -1,6 +1,6 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="app_name" translatable="false">WLED</string>
-    <string name="app_logo">WLED Logo</string>
+    <string name="app_name" translatable="false">NOXEN</string>
+    <string name="app_logo">NOXEN Logo</string>
     <string name="add_a_device">Add a New Device</string>
     <string name="add">Add</string>
     <string name="deleting_device">Delete Device?</string>
@@ -19,7 +19,7 @@
     <string name="battery_percentage">Battery:</string>
     <string name="refresh_page">Refresh Page</string>
     <string name="edit_device">Edit Device</string>
-    <string name="edit_device_with_name">Edit Device - <xliff:g example="WLED" id="device_name">%1$s</xliff:g></string>
+    <string name="edit_device_with_name">Edit Device - <xliff:g example="Device" id="device_name">%1$s</xliff:g></string>
     <string name="device_is_visible">Device is visible</string>
     <string name="device_is_hidden">Device is Hidden</string>
     <string name="hidden_status">(Hidden)</string>
@@ -38,7 +38,7 @@
     <string name="show_offline_devices_last">Show Offline Devices Last</string>
     <string name="description_menu_button">Open Menu</string>
     <string name="description_back_button">Go Back</string>
-    <string name="device_ap_mode_detected">WLED AP Mode Detected</string>
+    <string name="device_ap_mode_detected">NOXEN AP Mode Detected</string>
     <string name="device_ap_mode_detected_click">Click here to open Device</string>
     <string name="install">Install</string>
     <string name="later">Later</string>
@@ -58,9 +58,9 @@
     <string name="done">Done</string>
     <string name="update_completed">Update Completed!</string>
     <string name="are_you_sure">Are you sure?</string>
-    <string name="device_update_disclaimer_part1">You are about to install a new version of WLED on your device. If you had a custom version installed previously, you might lose some functionalities (for example, if you had some usermods enabled, they might not work anymore).</string>
+    <string name="device_update_disclaimer_part1">You are about to install a new version of NOXEN on your device. If you had a custom version installed previously, you might lose some functionalities (for example, if you had some usermods enabled, they might not work anymore).</string>
     <string name="device_update_disclaimer_part2">If someone installed this device for you, you should maybe ask them if it is alright to update the device to a new version.</string>
-    <string name="device_update_disclaimer_part3">WLED is not responsible if something goes wrong due to an update.</string>
+    <string name="device_update_disclaimer_part3">NOXEN is not responsible if something goes wrong due to an update.</string>
     <string name="install_update">Install Update</string>
     <string name="ota_install_failed_device_locked">Your device might be PIN protected or locked with a passphrase.</string>
     <string name="no_compatible_version_found">No Compatible Version Found</string>
@@ -75,6 +75,6 @@
     <string name="version_v_num">Version <xliff:g example="v0.14.0" id="version_name">%1$s</xliff:g></string>
     <string name="select_a_device_from_the_list">Select a device from the list</string>
     <string name="downloading_file">Downloading File</string>
-    <string name="help">WLED Help</string>
-    <string name="support_me">Support Moustachauve</string>
+    <string name="help">Help</string>
+    <string name="support_me">Rate NOXEN</string>
 </resources>

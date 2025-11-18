@@ -305,13 +305,13 @@ private fun DrawerContent(
         label = { Text(text = stringResource(R.string.support_me)) },
         icon = {
             Icon(
-                painter = painterResource(id = R.drawable.baseline_coffee_24),
+                painter = painterResource(id = R.drawable.outline_bookmark_star_24),
                 contentDescription = stringResource(R.string.support_me)
             )
         },
         selected = false,
         onClick = {
-            uriHandler.openUri("https://github.com/sponsors/Moustachauve")
+            uriHandler.openUri("https://play.google.com/store/apps/details?id=ca.cgagnier.wlednativeandroid")
         },
         modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
     )
