@@ -1,13 +1,19 @@
 package ca.cgagnier.wlednativeandroid.ui
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import ca.cgagnier.wlednativeandroid.FileUploadContract
@@ -22,12 +28,14 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 private const val TAG = "MainActivity"
+private const val REQUEST_LOCATION_AND_WIFI_PERMS = 1001
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var userPreferencesRepository: UserPreferencesRepository
+
     @Inject
     lateinit var versionWithAssetsRepository: VersionWithAssetsRepository
 
@@ -48,12 +56,65 @@ class MainActivity : ComponentActivity() {
         installSplashScreen()
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+
         setContent {
             WLEDNativeTheme {
                 MainNavHost()
             }
         }
+
+        // Pedimos permisos necesarios para poder leer el SSID / WiFi
+        ensureLocationAndWifiPermissions()
+
         updateDeviceVersionList()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        // DEBUG: detectar si estamos conectados al AP del WLED
+        if (isConnectedToWledAp(this)) {
+            Toast.makeText(this, "Conectado al AP de WLED", Toast.LENGTH_SHORT).show()
+            // Más adelante aquí abriremos directamente el dispositivo 4.3.2.1
+        } else {
+            // Opcional para debug:
+            // Toast.makeText(this, "No estás en WLED-AP", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    /**
+     * Pide permisos de ubicación y de WiFi cercanos (Android 13+) si aún no se han concedido.
+     */
+    private fun ensureLocationAndWifiPermissions() {
+        val permissionsToRequest = mutableListOf<String>()
+
+        // Necesario para poder leer el SSID en Android 10+
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            permissionsToRequest.add(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+
+        // Para Android 13+ se recomienda pedir NEARBY_WIFI_DEVICES
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.NEARBY_WIFI_DEVICES
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                permissionsToRequest.add(Manifest.permission.NEARBY_WIFI_DEVICES)
+            }
+        }
+
+        if (permissionsToRequest.isNotEmpty()) {
+            ActivityCompat.requestPermissions(
+                this,
+                permissionsToRequest.toTypedArray(),
+                REQUEST_LOCATION_AND_WIFI_PERMS
+            )
+        }
     }
 
     /**
