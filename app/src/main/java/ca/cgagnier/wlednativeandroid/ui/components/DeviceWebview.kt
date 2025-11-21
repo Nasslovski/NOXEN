@@ -141,10 +141,20 @@ fun DeviceWebView(
         Log.i(TAG, "Device changed, resetting")
         webView.loadUrl("about:blank")
         navigator.reset()
-        Log.i(TAG, "Navigating to ${device.getDeviceUrl()}")
+
+        // --- URL especial para NOXEN AP Mode ---
+        // Si el dispositivo está en modo AP (4.3.2.1), vamos directo a los controles
+        val targetUrl = if (device.isAPMode()) {
+            "http://${device.address}/?sliders=1"
+        } else {
+            device.getDeviceUrl()
+        }
+
+        Log.i(TAG, "Navigating to $targetUrl")
         state.loadingState = Loading(0.0f)
-        navigator.loadUrl(device.getDeviceUrl())
+        navigator.loadUrl(targetUrl)
     }
+
 
     AndroidView(
         factory = { currentContext ->
