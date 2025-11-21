@@ -38,7 +38,9 @@ class DeviceListDetailViewModel @Inject constructor(
     private val stateFactory: StateFactory,
     private val preferencesRepository: UserPreferencesRepository,
     networkManager: NetworkConnectivityManager
-): AndroidViewModel(application) {
+) : AndroidViewModel(application) {
+
+    // Indica si estamos conectados al AP de WLED (captive portal / red WLED-AP)
     val isWLEDCaptivePortal = networkManager.isWLEDCaptivePortal
 
     private var isPolling by mutableStateOf(false)
@@ -60,6 +62,18 @@ class DeviceListDetailViewModel @Inject constructor(
 
     private val _isAddDeviceBottomSheetVisible = MutableStateFlow(false)
     val isAddDeviceBottomSheetVisible: StateFlow<Boolean> = _isAddDeviceBottomSheetVisible
+
+    init {
+        // Cuando detectamos que estamos conectados al AP de WLED,
+        // nos aseguramos de tener un dispositivo "fijo" 4.3.2.1 en la base.
+        viewModelScope.launch {
+            isWLEDCaptivePortal.collect { isAp ->
+                if (isAp) {
+                    ensureDefaultApDevice()
+                }
+            }
+        }
+    }
 
     fun getDeviceByAddress(address: String): Flow<Device?> {
         Log.d(TAG, "Getting device by address $address")
@@ -126,12 +140,13 @@ class DeviceListDetailViewModel @Inject constructor(
         discoveryService.start()
     }
 
-    fun startDiscoveryServiceTimed(timeMillis: Long = 10000) = viewModelScope.launch(Dispatchers.IO) {
-        Log.i(TAG, "Start device discovery")
-        startDiscoveryService()
-        delay(timeMillis)
-        stopDiscoveryService()
-    }
+    fun startDiscoveryServiceTimed(timeMillis: Long = 10000) =
+        viewModelScope.launch(Dispatchers.IO) {
+            Log.i(TAG, "Start device discovery")
+            startDiscoveryService()
+            delay(timeMillis)
+            stopDiscoveryService()
+        }
 
     fun stopDiscoveryService() {
         Log.i(TAG, "Stop device discovery")
@@ -204,9 +219,22 @@ class DeviceListDetailViewModel @Inject constructor(
             true
         }
     }
+
     fun hideAddDeviceBottomSheet() {
         _isAddDeviceBottomSheetVisible.update {
             false
+        }
+    }
+
+    /**
+     * Se asegura de que exista un dispositivo "WLED AP" con IP 4.3.2.1
+     * en la base de datos cuando estamos conectados al AP de WLED.
+     */
+    private fun ensureDefaultApDevice() = viewModelScope.launch(Dispatchers.IO) {
+        val apDevice = Device.getDefaultAPDevice()
+        if (!repository.contains(apDevice)) {
+            Log.i(TAG, "Inserting default WLED AP device (${apDevice.address})")
+            repository.insert(apDevice)
         }
     }
 }
